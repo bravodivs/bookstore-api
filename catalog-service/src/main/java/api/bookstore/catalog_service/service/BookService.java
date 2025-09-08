@@ -8,15 +8,21 @@ import api.bookstore.catalog_service.repository.BookRepository;
 import api.bookstore.catalog_service.utils.BookUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 public class BookService {
+
+    @Autowired
     private final BookRepository bookRepository;
+
+    @Autowired
     private final BookEventPublisher eventPublisher;
 
     private static final Logger logger = LoggerFactory.getLogger(BookService.class);
@@ -26,10 +32,14 @@ public class BookService {
         this.eventPublisher = eventPublisher;
     }
 
-    public List<Book> getAllBooks(){
+    public List<BookDTO> getAllBooks(){
         var books = bookRepository.findAll();
-        if (!books.isEmpty())
-            return books;
+        if (!books.isEmpty()){
+            List<BookDTO> booksDto = new ArrayList<>(books.size());
+            books.forEach(b -> {
+                booksDto.add(BookUtil.BookDaoToDto(b));
+            });
+        }
         logger.warn("No books found in database");
         throw new CustomException("No books found in database", HttpStatus.NOT_FOUND);
     }
@@ -37,7 +47,7 @@ public class BookService {
     public UUID createBook(BookDTO book) {
         Book saved = bookRepository.save(BookUtil.BookDtoToDao(book));
         eventPublisher.publishBookCreated(saved);
-        return saved.id;
+        return saved.getId();
     }
 
     public Book getBookById(UUID id){

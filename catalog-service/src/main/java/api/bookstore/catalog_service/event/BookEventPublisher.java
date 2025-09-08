@@ -24,6 +24,6 @@ public class BookEventPublisher {
                 "title", book.getTitle(),
                 "price", book.getPrice()
         );
-        kafkaTemplate.send("book-events", event);
+//        kafkaTemplate.send("book-events", event);
     }
 }
