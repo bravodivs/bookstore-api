@@ -7,10 +7,10 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/catalogdb
     username: postgres
-    password: password
+    password: postgres
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:

@@ -1,4 +1,5 @@
 package api.bookstore.inventory_service.event;
 
-public class StockReducedEvent {
-}
+import java.util.UUID;
+
+public record StockReducedEvent(UUID orderId, UUID productId, int reducedQty) {}

@@ -39,6 +39,7 @@ public class BookService {
             books.forEach(b -> {
                 booksDto.add(BookUtil.BookDaoToDto(b));
             });
+            return booksDto;
         }
         logger.warn("No books found in database");
         throw new CustomException("No books found in database", HttpStatus.NOT_FOUND);

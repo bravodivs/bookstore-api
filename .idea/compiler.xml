@@ -8,14 +8,14 @@
         <outputRelativeToContentRoot value="true" />
         <module name="catalog-service" />
         <module name="inventory-service" />
+        <module name="order-service" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="Bookstore" target="1.5" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_STRING" value="-parameters" />
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="bookstore-parent" options="" />
       <module name="catalog-service" options="-parameters" />
       <module name="inventory-service" options="-parameters" />
     </option>
