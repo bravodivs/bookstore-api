@@ -1,3 +1,4 @@
 CREATE DATABASE inventorydb;
 CREATE DATABASE catalogdb;
 CREATE DATABASE orderdb;
+CREATE DATABASE paymentsdb;

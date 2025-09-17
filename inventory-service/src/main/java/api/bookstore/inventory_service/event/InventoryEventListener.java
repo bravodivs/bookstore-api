@@ -17,9 +17,9 @@ public class InventoryEventListener {
 
     @KafkaListener(topics = "payment-events", groupId = "inventory-service")
     public void handlePaymentSuccessful(PaymentSuccessfulEvent event) {
-        service.reduceStock(event.productId(), event.quantity());
+        service.reduceStock(event.bookId(), event.quantity());
         kafkaTemplate.send("inventory-events",
-                event.productId().toString(),
-                new StockReducedEvent(event.orderId(), event.productId(), event.quantity()));
+                event.bookId().toString(),
+                new StockReducedEvent(event.orderId(), event.bookId(), event.quantity()));
     }
 }
