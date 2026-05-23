@@ -2,7 +2,11 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
          http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.5</version>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>api.bookstore</groupId>
     <artifactId>bookstore-parent</artifactId>
@@ -11,8 +15,8 @@
 
     <properties>
         <java.version>21</java.version>
-        <spring-boot.version>3.3.5</spring-boot.version>
-        <spring-cloud.version>2023.0.3</spring-cloud.version>
+        <spring-boot.version>3.2.5</spring-boot.version>
+        <spring-cloud.version>2023.0.1</spring-cloud.version>
     </properties>
 
     <modules>
@@ -38,13 +42,14 @@
     <dependencyManagement>
         <dependencies>
             <!-- Spring Boot BOM -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring-boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-dependencies</artifactId>-->
+<!--                <version>${spring-boot.version}</version>-->
+<!--                <type>pom</type>-->
+<!--                <scope>import</scope>-->
+<!--            </dependency>-->
+<!--            because we already inherit from spring-boot-starter-parent-->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
@@ -55,31 +60,32 @@
         </dependencies>
     </dependencyManagement>
 
-    <dependencies>
-        <!-- Web starter -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
+<!--    dependencies should be in individual files. only common ones should be here-->
+<!--    <dependencies>-->
+<!--        &lt;!&ndash; Web starter &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-web</artifactId>-->
+<!--        </dependency>-->
 
-        <!-- JPA / Hibernate -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
+<!--        &lt;!&ndash; JPA / Hibernate &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-data-jpa</artifactId>-->
+<!--        </dependency>-->
 
-        <!-- Kafka -->
-        <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka</artifactId>
-        </dependency>
+<!--        &lt;!&ndash; Kafka &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.kafka</groupId>-->
+<!--            <artifactId>spring-kafka</artifactId>-->
+<!--        </dependency>-->
 
-        <!-- Postgres driver -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-        </dependency>
-    </dependencies>
+<!--        &lt;!&ndash; Postgres driver &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.postgresql</groupId>-->
+<!--            <artifactId>postgresql</artifactId>-->
+<!--        </dependency>-->
+<!--    </dependencies>-->
 
     <build>
         <pluginManagement>
