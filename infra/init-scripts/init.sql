@@ -1,4 +1,8 @@
-CREATE DATABASE inventorydb;
+CREATE DATABASE authdb;
 CREATE DATABASE catalogdb;
+CREATE DATABASE inventorydb;
+CREATE DATABASE pricingdb;
 CREATE DATABASE orderdb;
 CREATE DATABASE paymentsdb;
+CREATE DATABASE shippingdb;
+CREATE DATABASE reviewdb;

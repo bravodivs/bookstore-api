@@ -1,0 +1,10 @@
+# IDE and OS
+.DS_Store
+.idea/
+
+# Maven
+**/target/
+
+# Local runtime artifacts
+infra/postgres_data/
+*.log

@@ -1,13 +1,13 @@
 server:
-  port: 8081
+  port: 8083
 
 spring:
   application:
-    name: catalog-service
+    name: order-service
   config:
     import: optional:configserver:http://localhost:8888
   datasource:
-    url: jdbc:postgresql://localhost:5432/catalogdb
+    url: jdbc:postgresql://localhost:5432/orderdb
     username: postgres
     password: postgres
   jpa:
@@ -23,7 +23,7 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     consumer:
-      group-id: bookstore-group
+      group-id: order-group
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:

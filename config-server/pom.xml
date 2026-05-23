@@ -12,23 +12,14 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>catalog-service</artifactId>
-    <name>Catalog Service</name>
-    <description>Catalog service for bookstore</description>
+    <artifactId>config-server</artifactId>
+    <name>Config Server</name>
+    <description>Centralized configuration service</description>
 
     <dependencies>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-config</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>api.bookstore</groupId>
-            <artifactId>common-events</artifactId>
-            <version>${project.version}</version>
+            <artifactId>spring-cloud-config-server</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -40,5 +31,14 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

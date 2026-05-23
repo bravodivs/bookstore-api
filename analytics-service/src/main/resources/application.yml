@@ -1,0 +1,24 @@
+server:
+  port: 8093
+
+spring:
+  application:
+    name: analytics-service
+  config:
+    import: optional:configserver:http://localhost:8888
+  elasticsearch:
+    uris: http://localhost:9200
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: analytics-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "api.bookstore.common.events,java.util,java.lang"
+        spring.json.use.type.headers: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

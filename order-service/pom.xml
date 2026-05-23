@@ -10,11 +10,11 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-	<artifactId>inventory-service</artifactId>
-	<name>inventory-service</name>
-	<description>Inventory service for bookstore</description>
+	<artifactId>order-service</artifactId>
+	<name>order-service</name>
+	<description>Order service for bookstore</description>
 
-	<url/>
+    <url/>
 	<licenses>
 		<license/>
 	</licenses>

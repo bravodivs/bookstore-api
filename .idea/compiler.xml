@@ -6,11 +6,22 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="inventory-service" />
-        <module name="order-service" />
-        <module name="payment-service" />
-        <module name="notification-service" />
+        <module name="cart-service" />
+        <module name="review-service" />
         <module name="catalog-service" />
+        <module name="eureka-server" />
+        <module name="notification-service" />
+        <module name="recommendation-service" />
+        <module name="config-server" />
+        <module name="auth-service" />
+        <module name="inventory-service" />
+        <module name="payment-service" />
+        <module name="analytics-service" />
+        <module name="api-gateway" />
+        <module name="order-service" />
+        <module name="common-events" />
+        <module name="pricing-service" />
+        <module name="shipping-service" />
       </profile>
     </annotationProcessing>
   </component>
