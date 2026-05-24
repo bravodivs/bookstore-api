@@ -1,11 +1,10 @@
 package api.bookstore.catalog_service.event;
 
+import api.bookstore.common.events.BookCreatedEvent;
 import api.bookstore.catalog_service.models.Book;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-import java.util.Map;
 import java.util.UUID;
 
 /// Kafka is used for asynchronous communication between services
@@ -15,14 +14,12 @@ import java.util.UUID;
 public class BookEventPublisher {
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
-    record BookEvent(UUID eventId, String type, UUID bookId, String isbn, String title, BigDecimal price){}
-
     public BookEventPublisher(KafkaTemplate<String, Object> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
     public void publishBookCreated(Book book) {
-        BookEvent event = new BookEvent(UUID.randomUUID(),
+        BookCreatedEvent event = new BookCreatedEvent(UUID.randomUUID(),
                 "book.created",
                 book.getId(),
                 book.getIsbn(),

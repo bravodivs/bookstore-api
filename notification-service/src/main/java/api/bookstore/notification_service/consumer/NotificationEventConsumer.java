@@ -1,37 +1,53 @@
 package api.bookstore.notification_service.consumer;
 
-import api.bookstore.notification_service.models.OrderConfirmedEvent;
-import api.bookstore.notification_service.models.PaymentSuccessEvent;
+import api.bookstore.common.events.OrderCreatedEvent;
+import api.bookstore.common.events.PaymentProcessedEvent;
+import api.bookstore.common.events.ShipmentCreatedEvent;
 import api.bookstore.notification_service.service.EmailService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Service;
 
+@Service
 public class NotificationEventConsumer {
     private final EmailService emailService;
-    private final ObjectMapper objectMapper;
 
-    public NotificationEventConsumer(EmailService emailService, ObjectMapper objectMapper) {
+    public NotificationEventConsumer(EmailService emailService) {
         this.emailService = emailService;
-        this.objectMapper = objectMapper;
     }
 
-    @KafkaListener(topics = "order-confirmed", groupId = "notification-service")
-    public void consumeOrderConfirmed(String message) throws Exception {
-        OrderConfirmedEvent event = objectMapper.readValue(message, OrderConfirmedEvent.class);
+    @KafkaListener(topics = "order-events", groupId = "notification-group")
+    public void consumeOrderCreated(OrderCreatedEvent event) {
+        if (event.userEmail() == null || event.userEmail().isBlank()) {
+            return;
+        }
+        emailService.sendMail(event.userEmail(),
+                "Order Received - " + event.orderId(),
+                "Your order is created and awaiting payment.");
+    }
+
+    @KafkaListener(topics = "payment-events", groupId = "notification-group")
+    public void consumePaymentSuccess(PaymentProcessedEvent event) {
+        if (event.userEmail() == null || event.userEmail().isBlank()) {
+            return;
+        }
         emailService.sendMail(
-                event.getUserEmail(),
-                "Order Confirmed - " + event.getOrderId(),
-                "Hi, your order for " + event.getBookTitle() + " has been confirmed. Amount: " + event.getAmount()
+                event.userEmail(),
+                event.success() ? "Payment Successful - " + event.orderId() : "Payment Failed - " + event.orderId(),
+                event.success()
+                        ? "Payment of " + event.amount() + " was successful. Transaction: " + event.transactionId()
+                        : "Payment failed. Please retry checkout."
         );
     }
 
-    @KafkaListener(topics = "payment-success", groupId = "notification-service")
-    public void consumePaymentSuccess(String message) throws Exception {
-        PaymentSuccessEvent event = objectMapper.readValue(message, PaymentSuccessEvent.class);
+    @KafkaListener(topics = "shipping-events", groupId = "notification-group")
+    public void consumeShipmentCreated(ShipmentCreatedEvent event) {
+        if (event.userEmail() == null || event.userEmail().isBlank()) {
+            return;
+        }
         emailService.sendMail(
-                event.getUserEmail(),
-                "Payment Successful - " + event.getPaymentId(),
-                "Hi, your payment of " + event.getAmount() + " for order " + event.getOrderId() + " was successful."
+                event.userEmail(),
+                "Shipment Created - " + event.orderId(),
+                "Tracking ID: " + event.trackingId() + " via " + event.carrier()
         );
     }
 }

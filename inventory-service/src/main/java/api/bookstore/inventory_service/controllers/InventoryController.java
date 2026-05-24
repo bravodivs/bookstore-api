@@ -1,7 +1,6 @@
 package api.bookstore.inventory_service.controllers;
 
 import api.bookstore.inventory_service.services.InventoryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +22,11 @@ import java.util.UUID;
 @RequestMapping("/api/inventory")
 public class InventoryController {
 
-    @Autowired
-    private InventoryService inventoryService;
+    private final InventoryService inventoryService;
+
+    public InventoryController(InventoryService inventoryService) {
+        this.inventoryService = inventoryService;
+    }
 
     @GetMapping("/{bookId}")
     public ResponseEntity<Integer> checkStock(@PathVariable UUID bookId){
@@ -47,13 +49,13 @@ public class InventoryController {
     @PostMapping("/add/{bookId}/{qty}")
     public ResponseEntity<String> addStock(@PathVariable UUID bookId, @PathVariable int qty){
         inventoryService.addStock(bookId, qty);
-        return ResponseEntity.ok("Returned stock");
+        return ResponseEntity.ok("Stock added");
     }
 
     // todo to be used only for testing. actual reduction via events.
     @PostMapping("/reduce/{bookId}/{qty}")
     public ResponseEntity<String> reduceStock(@PathVariable UUID bookId, @PathVariable int qty ){
         inventoryService.reduceStock(bookId, qty);
-        return ResponseEntity.ok("Returned stock");
+        return ResponseEntity.ok("Stock reduced");
     }
 }

@@ -1,7 +1,7 @@
 package api.bookstore.payment_service.service;
 
-import api.bookstore.payment_service.events.OrderCreatedEvent;
-import api.bookstore.payment_service.events.PaymentProcessedEvent;
+import api.bookstore.common.events.PaymentProcessedEvent;
+import api.bookstore.common.events.StockReservedEvent;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -16,21 +16,26 @@ public class PaymentsService {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    @KafkaListener(topics = "order-events", groupId = "payment-group")
-    public void handleOrderCreated(OrderCreatedEvent event) {
-        System.out.println("Processing payment for Order: " + event.orderId());
-
-        // Dummy logic → always succeed
+    @KafkaListener(topics = "inventory-events", groupId = "payment-group")
+    public void handleStockReserved(StockReservedEvent event) {
+        if (!event.reserved()) {
+            return;
+        }
+        // Placeholder payment behavior for local development.
         boolean success = true;
 
         PaymentProcessedEvent paymentEvent = new PaymentProcessedEvent(
                 UUID.randomUUID(),
-                success ? "order.paid" : "order.failed",
+                success ? "payment.succeeded" : "payment.failed",
                 event.orderId(),
-                success
+                event.bookId(),
+                event.quantity(),
+                event.amount(),
+                event.userEmail(),
+                success,
+                UUID.randomUUID().toString()
         );
 
         kafkaTemplate.send("payment-events", event.orderId().toString(), paymentEvent);
-        System.out.println("Payment event published: " + paymentEvent);
     }
 }

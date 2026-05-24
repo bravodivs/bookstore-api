@@ -1,6 +1,5 @@
 package api.bookstore.catalog_service.controllers;
 
-
 import api.bookstore.catalog_service.models.Book;
 import api.bookstore.catalog_service.models.BookDTO;
 import api.bookstore.catalog_service.service.BookService;
@@ -37,18 +36,16 @@ public class BookController {
 
     // GET /api/catalog/books/{id}
     @GetMapping("/{id}")
-    public ResponseEntity<String> getBookDetails(@PathVariable UUID id) {
-        // TODO: return book details by id
+    public ResponseEntity<Book> getBookDetails(@PathVariable UUID id) {
         var book = bookService.getBookById(id);
-        return ResponseEntity.ok("Details of book \n" + book);
+        return ResponseEntity.ok(book);
     }
 
-    // GET /api/catalog/books/{title}
-    @GetMapping("/{title}")
-    public ResponseEntity<String> getBooksByTitle(@PathVariable String title) {
-        // TODO: return books by title search
+    // GET /api/catalog/books/search?title=foo
+    @GetMapping("/search")
+    public ResponseEntity<List<Book>> getBooksByTitle(@RequestParam String title) {
         var books = bookService.search(title);
-        return ResponseEntity.ok("List of books " + books.toString());
+        return ResponseEntity.ok(books);
     }
 
     // PUT /api/catalog/books/{id}
