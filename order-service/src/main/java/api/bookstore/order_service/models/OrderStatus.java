@@ -1,9 +1,10 @@
 package api.bookstore.order_service.models;
 
 public enum OrderStatus {
-    PENDING,
-    CONFIRMED,
-    CANCELLED,
+    CREATED,
+    PENDING_PAYMENT,
     PAID,
-    PAYMENT_FAILED
+    SHIPPED,
+    PAYMENT_FAILED,
+    CANCELLED
 }

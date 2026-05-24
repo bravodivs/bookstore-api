@@ -7,7 +7,7 @@ spring:
   config:
     import: optional:configserver:http://localhost:8888
   datasource:
-    url: jdbc:postgresql://localhost:5432/orderdb
+    url: jdbc:postgresql://localhost:5432/orderdb?timezone=UTC
     username: postgres
     password: postgres
   jpa:

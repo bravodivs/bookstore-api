@@ -1,6 +1,7 @@
 package api.bookstore.order_service.services;
 
-import api.bookstore.order_service.events.PaymentProcessedEvent;
+import api.bookstore.common.events.PaymentProcessedEvent;
+import api.bookstore.common.events.ShipmentCreatedEvent;
 import api.bookstore.order_service.models.Order;
 import api.bookstore.order_service.models.OrderDTO;
 import api.bookstore.order_service.models.OrderStatus;
@@ -30,7 +31,15 @@ public class PaymentEventHandler {
                 order.setOrderStatus(OrderStatus.PAYMENT_FAILED);
             }
             orderRepository.save(OrderUtil.toDao(order));
-            System.out.println("Order updated after payment: " + order);
         }
+    }
+
+    @KafkaListener(topics = "shipping-events", groupId = "order-group")
+    public void handleShipmentEvent(ShipmentCreatedEvent event) {
+        orderRepository.findById(event.orderId()).ifPresent(order -> {
+            order.setTrackingId(event.trackingId());
+            order.setOrderStatus(OrderStatus.SHIPPED);
+            orderRepository.save(order);
+        });
     }
 }
