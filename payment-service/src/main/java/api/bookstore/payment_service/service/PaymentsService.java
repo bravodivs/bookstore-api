@@ -2,6 +2,7 @@ package api.bookstore.payment_service.service;
 
 import api.bookstore.common.events.PaymentProcessedEvent;
 import api.bookstore.common.events.StockReservedEvent;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -11,9 +12,12 @@ import java.util.UUID;
 @Service
 public class PaymentsService {
     private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final boolean forceFailure;
 
-    public PaymentsService(KafkaTemplate<String, Object> kafkaTemplate) {
+    public PaymentsService(KafkaTemplate<String, Object> kafkaTemplate,
+                           @Value("${payment.force-failure:false}") boolean forceFailure) {
         this.kafkaTemplate = kafkaTemplate;
+        this.forceFailure = forceFailure;
     }
 
     @KafkaListener(topics = "inventory-events", groupId = "payment-group")
@@ -21,8 +25,7 @@ public class PaymentsService {
         if (!event.reserved()) {
             return;
         }
-        // Placeholder payment behavior for local development.
-        boolean success = true;
+        boolean success = !forceFailure;
 
         PaymentProcessedEvent paymentEvent = new PaymentProcessedEvent(
                 UUID.randomUUID(),

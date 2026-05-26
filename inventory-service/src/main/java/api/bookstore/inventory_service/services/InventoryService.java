@@ -23,6 +23,7 @@ public class InventoryService {
 
     @Transactional
     public void addStock(UUID bookId, int quantity){
+        validateNonNegativeQuantity(quantity);
         var inventory = inventoryRepository.findByBookId(bookId).orElseGet(() -> {
             var newInventory = new api.bookstore.inventory_service.models.Inventory();
             newInventory.setBookId(bookId);
@@ -36,6 +37,7 @@ public class InventoryService {
 
     @Transactional
     public void reduceStock(UUID bookId, int quantity){
+        validateQuantity(quantity);
         var inventory = inventoryRepository.findByBookId(bookId)
                 .orElseThrow(() -> new IllegalArgumentException("Inventory not found for bookId " + bookId));
 
@@ -49,6 +51,7 @@ public class InventoryService {
 
     @Transactional
     public boolean reserveStock(UUID bookId, int quantity) {
+        validateQuantity(quantity);
         var inventoryOpt = inventoryRepository.findByBookId(bookId);
         if (inventoryOpt.isEmpty()) {
             return false;
@@ -65,6 +68,7 @@ public class InventoryService {
 
     @Transactional
     public void finalizeReservation(UUID bookId, int quantity) {
+        validateQuantity(quantity);
         var inventoryOpt = inventoryRepository.findByBookId(bookId);
         if (inventoryOpt.isEmpty()) {
             return;
@@ -77,6 +81,7 @@ public class InventoryService {
 
     @Transactional
     public void releaseReservation(UUID bookId, int quantity) {
+        validateQuantity(quantity);
         var inventoryOpt = inventoryRepository.findByBookId(bookId);
         if (inventoryOpt.isEmpty()) {
             return;
@@ -84,5 +89,17 @@ public class InventoryService {
         var inventory = inventoryOpt.get();
         inventory.setReservedQuantity(Math.max(0, inventory.getReservedQuantity() - quantity));
         inventoryRepository.save(inventory);
+    }
+
+    private void validateQuantity(int quantity){
+        if (quantity <= 0){
+            throw new IllegalArgumentException("Quantity must be greater than zero");
+        }
+    }
+
+    private void validateNonNegativeQuantity(int quantity){
+        if (quantity < 0){
+            throw new IllegalArgumentException(("Quantity cannot be negative"));
+        }
     }
 }

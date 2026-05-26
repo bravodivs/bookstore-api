@@ -31,8 +31,15 @@ public class OrderService {
         if (request.getQuantity() <= 0) {
             throw new IllegalArgumentException("quantity must be greater than zero");
         }
+        if (request.getUserEmail() == null || request.getUserEmail().isBlank()) {
+            throw new IllegalArgumentException("user email is required");
+        }
 
         BigDecimal unitPrice = request.getUnitPrice() == null ? BigDecimal.ZERO : request.getUnitPrice();
+        if (unitPrice.signum() < 0){
+            throw new IllegalArgumentException("unit price cannot be negative");
+        }
+
         BigDecimal totalAmount = unitPrice.multiply(BigDecimal.valueOf(request.getQuantity()));
 
         OrderDTO order = new OrderDTO();

@@ -21,9 +21,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> customException(CustomException cx) {
         HashMap<String, String> map = new HashMap<>();
         map.put("Message", cx.getMessage());
-        map.put("Status", String.valueOf(cx.getStatus()));
+        map.put("Status", String.valueOf(cx.getStatus().value()));
 
-        logger.error("Error encountered {} with \n ' lol' message {}\n", cx.getStatus(), cx.getMessage()+'"');
+        logger.error("Error encountered in catalog service {} with \n message {}\n", cx.getStatus(), cx.getMessage()+'"');
         return new ResponseEntity<>(map, cx.getStatus());
     }
 
@@ -41,13 +41,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> otherFailures(Exception ex) {
         HashMap<String, String> map = new HashMap<>();
 
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        ex.printStackTrace(pw);
+//        StringWriter sw = new StringWriter();
+//        PrintWriter pw = new PrintWriter(sw);
+//        ex.printStackTrace(pw);
 
         map.put("Message", ex.getMessage());
         map.put("Status", HttpStatus.INTERNAL_SERVER_ERROR.toString());
-        map.put("Stack trace", sw.toString());
+        logger.error("Unhandled exception in catalog service ", ex);
         return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

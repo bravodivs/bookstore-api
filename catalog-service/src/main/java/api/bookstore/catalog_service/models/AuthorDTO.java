@@ -7,13 +7,11 @@ public class AuthorDTO {
     private UUID id;
     private String name;
     private String bio;
-    private Set<Book> books;
 
-    public AuthorDTO(UUID id, String name, String bio, Set<Book> books) {
+    public AuthorDTO(UUID id, String name, String bio) {
         this.id = id;
         this.name = name;
         this.bio = bio;
-        this.books = books;
     }
 
     public UUID getId() {
@@ -40,14 +38,6 @@ public class AuthorDTO {
         this.bio = bio;
     }
 
-    public Set<Book> getBooks() {
-        return books;
-    }
-
-    public void setBooks(Set<Book> books) {
-        this.books = books;
-    }
 
     // no list of books here (to prevent recursion)
-    // getters and setters
 }

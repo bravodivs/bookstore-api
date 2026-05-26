@@ -9,11 +9,10 @@ public class PublisherDTO {
     private String address;
     private Set<Book> books;
 
-    public PublisherDTO(UUID id, String name, String address, Set<Book> books) {
+    public PublisherDTO(UUID id, String name, String address) {
         this.id = id;
         this.name = name;
         this.address = address;
-        this.books = books;
     }
 
     public UUID getId() {
@@ -38,14 +37,6 @@ public class PublisherDTO {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public Set<Book> getBooks() {
-        return books;
-    }
-
-    public void setBooks(Set<Book> books) {
-        this.books = books;
     }
 
     // no list of books here (to prevent recursion)

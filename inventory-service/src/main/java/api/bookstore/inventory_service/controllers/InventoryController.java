@@ -30,7 +30,6 @@ public class InventoryController {
 
     @GetMapping("/{bookId}")
     public ResponseEntity<Integer> checkStock(@PathVariable UUID bookId){
-        //todo add the service function
         var qty = inventoryService.checkStock(bookId);
         return ResponseEntity.ok(qty);
     }

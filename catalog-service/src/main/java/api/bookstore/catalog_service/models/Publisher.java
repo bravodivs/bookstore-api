@@ -29,21 +29,39 @@ public class Publisher {
         this.books = books;
     }
 
+    public Publisher(){}
+
+    // Getters & Setters
+
     public UUID getId() {
         return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getAddress() {
         return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public Set<Book> getBooks() {
         return books;
     }
 
-    // Getters & Setters
+    public void setBooks(Set<Book> books) {
+        this.books = books;
+    }
 }

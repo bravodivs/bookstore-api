@@ -19,10 +19,8 @@ import java.util.UUID;
 @Service
 public class BookService {
 
-    @Autowired
     private final BookRepository bookRepository;
 
-    @Autowired
     private final BookEventPublisher eventPublisher;
 
     private static final Logger logger = LoggerFactory.getLogger(BookService.class);
@@ -33,21 +31,20 @@ public class BookService {
     }
 
     public List<BookDTO> getAllBooks(){
-        var books = bookRepository.findAll();
-        if (!books.isEmpty()){
-            List<BookDTO> booksDto = new ArrayList<>(books.size());
-            books.forEach(b -> {
-                booksDto.add(BookUtil.BookDaoToDto(b));
-            });
-            return booksDto;
-        }
-        logger.warn("No books found in database");
-        throw new CustomException("No books found in database", HttpStatus.NOT_FOUND);
+        return bookRepository.findAll().stream()
+                .map(BookUtil::BookDaoToDto)
+                .toList();
     }
 
     public UUID createBook(BookDTO book) {
+        validateBookInput(book);
         Book saved = bookRepository.save(BookUtil.BookDtoToDao(book));
-        eventPublisher.publishBookCreated(saved);
+        try {
+            eventPublisher.publishBookCreated(saved);
+        }
+        catch (Exception e){
+            logger.error("Error publishing event. Check kafka is running. Error- {}", e.getMessage());
+        }
         return saved.getId();
     }
 
@@ -60,16 +57,51 @@ public class BookService {
     }
 
     //todo handle not found case
-    public List<Book> search(String title) {
-        return bookRepository.findByTitleContainingIgnoreCase(title);
+    public List<BookDTO> search(String title) {
+       return bookRepository.findByTitleContainingIgnoreCase(title).stream()
+               .map(BookUtil::BookDaoToDto)
+               .toList();
     }
 
     // todo add logic to delete by other params such as title
-    public boolean deleteBook(UUID id) {
-        if (this.getBookById(id) != null){
-            bookRepository.deleteById(id);
-    return true;
+    public void deleteBook(UUID id) {
+        if (!bookRepository.existsById(id)){
+            throw new CustomException("Book not found", HttpStatus.NOT_FOUND);
         }
-        return false;
+        bookRepository.deleteById(id);
+    }
+
+    public BookDTO updateBook(UUID id, BookDTO request){
+        validateBookInput(request);
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new CustomException("No book found", HttpStatus.NOT_FOUND));
+        Book mappedRequest = BookUtil.BookDtoToDao(request);
+        book.setIsbn(request.getIsbn());
+        book.setTitle(request.getTitle());
+        book.setDescription(request.getDescription());
+        book.setPrice(request.getPrice());
+        book.setPublicationDate(request.getPublicationDate());
+        if(request.getPublisher() != null){
+            book.setPublisher(mappedRequest.getPublisher());
+        }
+        if(request.getAuthors() != null){
+            book.setAuthors(mappedRequest.getAuthors());
+        }
+        return BookUtil.BookDaoToDto(bookRepository.save(book));
+    }
+
+    private void validateBookInput(BookDTO book){
+        if (book == null){
+            throw new CustomException("Book payload is required", HttpStatus.BAD_REQUEST);
+        }
+        if (book.getIsbn() == null || book.getIsbn().isBlank()){
+            throw new CustomException("ISBN is required", HttpStatus.BAD_REQUEST);
+        }
+        if (book.getTitle() == null || book.getTitle().isBlank()){
+            throw new CustomException("Title is required", HttpStatus.BAD_REQUEST);
+        }
+        if (book.getPrice() == null || book.getPrice().signum() < 0){
+            throw new CustomException("Price must be a non-negative value", HttpStatus.BAD_REQUEST);
+        }
     }
 }

@@ -29,22 +29,39 @@ public class Author {
         this.books = books;
     }
 
+    public Author(){}
+
+    // Getters & Setters
+
     public UUID getId() {
         return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getBio() {
         return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 
     public Set<Book> getBooks() {
         return books;
     }
 
-    // Getters & Setters
-
+    public void setBooks(Set<Book> books) {
+        this.books = books;
+    }
 }

@@ -20,6 +20,9 @@ public class InventoryReservationHandler {
             return;
         }
         orderRepository.findById(event.orderId()).ifPresent(order -> {
+            if(order.getOrderStatus() == OrderStatus.SHIPPED || order.getOrderStatus() == OrderStatus.PAID){
+                return;
+            }
             order.setOrderStatus(OrderStatus.CANCELLED);
             orderRepository.save(order);
         });

@@ -15,7 +15,6 @@ public class BookUtil {
 
     public static Book BookDtoToDao(BookDTO book){
         if (book == null) return null;
-        System.out.println("Received dto- "+ book);
 
         Book dao = new Book();
         dao.setId(book.getId());
@@ -31,26 +30,22 @@ public class BookUtil {
                     book.getPublisher().getId(),
                     book.getPublisher().getName(),
                     book.getPublisher().getAddress(),
-                    book.getPublisher().getBooks()
-            ));
+                    null            ));
         }
 
         // Authors mapping (only id + name)
         if (book.getAuthors() != null) {
             dao.setAuthors(
                     book.getAuthors().stream()
-                            .map(author -> new Author(author.getId(), author.getName(), author.getBio(), author.getBooks()))
+                            .map(author -> new Author(author.getId(), author.getName(), author.getBio(), null))
                             .collect(Collectors.toSet())
             );
         }
-        System.out.println("Converted dao- "+ dao);
-
         return dao;
     }
 
     public static BookDTO BookDaoToDto(Book book){
         if (book == null) return null;
-        System.out.println("Received dao- "+ book);
 
         BookDTO dto = new BookDTO();
         dto.setId(book.getId());
@@ -65,8 +60,7 @@ public class BookUtil {
             dto.setPublisher(new PublisherDTO(
                     book.getPublisher().getId(),
                     book.getPublisher().getName(),
-                    book.getPublisher().getAddress(),
-                    book.getPublisher().getBooks()
+                    book.getPublisher().getAddress()
             ));
         }
 
@@ -74,12 +68,11 @@ public class BookUtil {
         if (book.getAuthors() != null) {
             dto.setAuthors(
                     book.getAuthors().stream()
-                            .map(author -> new AuthorDTO(author.getId(), author.getName(), author.getBio(), author.getBooks()))
+                            .map(author -> new AuthorDTO(author.getId(), author.getName(), author.getBio()))
                             .collect(Collectors.toSet())
             );
         }
 
-        System.out.println("Converted dto- "+ dto);
         return dto;
     }
 }

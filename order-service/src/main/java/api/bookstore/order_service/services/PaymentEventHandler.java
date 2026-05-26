@@ -25,6 +25,9 @@ public class PaymentEventHandler {
         Optional<Order> orderOpt = orderRepository.findById(event.orderId());
         if (orderOpt.isPresent()) {
             OrderDTO order = OrderUtil.toDto(orderOpt.get());
+            if (order.getOrderStatus() == OrderStatus.CANCELLED || order.getOrderStatus() == OrderStatus.SHIPPED) {
+                return;
+            }
             if (event.success()) {
                 order.setOrderStatus(OrderStatus.PAID);
             } else {
@@ -37,6 +40,9 @@ public class PaymentEventHandler {
     @KafkaListener(topics = "shipping-events", groupId = "order-group")
     public void handleShipmentEvent(ShipmentCreatedEvent event) {
         orderRepository.findById(event.orderId()).ifPresent(order -> {
+            if (order.getOrderStatus() != OrderStatus.PAID) {
+                return;
+            }
             order.setTrackingId(event.trackingId());
             order.setOrderStatus(OrderStatus.SHIPPED);
             orderRepository.save(order);
