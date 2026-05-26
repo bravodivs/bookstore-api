@@ -1,3 +1,5 @@
+<img width="1376" height="768" alt="bookstore-cover" src="https://github.com/user-attachments/assets/6cd97b5d-401d-41b1-9b06-6452389e0311" />
+
 # Bookstore Microservices Workspace
 
 This project is a production-style Bookstore platform built using a microservices architecture with Spring Boot.
